@@ -1,21 +1,3 @@
-/*********************************************************************
-This is an example for our Monochrome OLEDs based on SSD1306 drivers
-
-  Pick one up today in the adafruit shop!
-  ------> http://www.adafruit.com/category/63_98
-
-This example is for a 128x32 size display using I2C to communicate
-3 pins are required to interface (2 I2C and one reset)
-
-Adafruit invests time and resources providing this open source code, 
-please support Adafruit and open-source hardware by purchasing 
-products from Adafruit!
-
-Written by Limor Fried/Ladyada  for Adafruit Industries.  
-BSD license, check license.txt for more information
-All text above, and the splash screen must be included in any redistribution
-*********************************************************************/
-
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -55,8 +37,6 @@ static const unsigned char PROGMEM logo16_glcd_bmp[] =
 
 const int lButton = 8;
 const int rButton = 9;
-float displayTimer = 0;
-boolean timerRunning = false;
 void setup()   {                
   Serial.begin(9600);
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
@@ -89,7 +69,7 @@ void oledSetup() {
 void clearAndWrite(String value) {
   // Clear the buffer.
   display.clearDisplay();
-  display.setTextSize(4);
+  display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
   display.println(value);
@@ -98,14 +78,10 @@ void clearAndWrite(String value) {
 
 void loop() {
   if (!digitalRead(lButton)) {
-    timerRunning = !timerRunning;
+    clearAndWrite(String("left pressed"));
+  } else if (!digitalRead(rButton)) {
+    clearAndWrite(String("right pressed"));
+  } else {
+    clearAndWrite(String("hello world"));
   }
-  if (!digitalRead(rButton)) {
-    displayTimer = 0;
-  }
-  if (timerRunning) {
-    displayTimer += 0.01;
-  }
-  clearAndWrite(String(displayTimer));
-  delay(1);
 }
